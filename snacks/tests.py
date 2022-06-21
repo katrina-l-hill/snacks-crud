@@ -1,3 +1,5 @@
+from doctest import debug_script
+from pydoc import describe
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -15,8 +17,9 @@ class SnackTests(TestCase):
         )
 
         self.snack = Snack.objects.create(
-            name="pickle",
-            reviewer=self.user,
+            title="pickle",  # made correction based off TA comments
+            purchaser=self.user,  # made correction based off TA comments
+            description="Salty snack",  # made correction based off TA comments
         )
 
     def test_string_representation(self):
@@ -25,6 +28,7 @@ class SnackTests(TestCase):
     def test_snack_content(self):
         self.assertEqual(f"{self.snack.title}", "pickle")
         self.assertEqual(f"{self.snack.purchaser}", "tester")
+        self.assertEqual(f"{self.snack.description}", "Salty snack")
 
     def test_snack_list_view(self):
         response = self.client.get(reverse("snack_list"))
@@ -44,8 +48,9 @@ class SnackTests(TestCase):
         response = self.client.post(
             reverse("snack_create"),
             {
-                "name": "Chocolate",
+                "title": "Chocolate",  # made correction based off TA comments
                 "purchaser": self.user.id,
+                "description": "Details about Chocolate",  # made correction based off TA comments
             },
             follow=True,
         )
@@ -56,7 +61,11 @@ class SnackTests(TestCase):
     def test_snack_update_view_redirect(self):
         response = self.client.post(
             reverse("snack_update", args="1"),
-            {"title": "Updated title", "purchaser": self.user.id},
+            {
+                "title": "Updated name",
+                "description": "3",
+                "purchaser": self.user.id,
+            },  # made correction based off TA comments
         )
 
         self.assertRedirects(response, reverse("snack_detail", args="1"))
